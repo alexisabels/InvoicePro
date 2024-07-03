@@ -8,7 +8,7 @@
 <h1><%= "Bienvenido" %></h1>
 <br/>
 <a href="hello-servlet">Hello Servlet</a>
-<a href="/productos">Productos</a>
-<a href="/usuarios">Usuarios</a>
+<a href="productos">Productos</a>
+<a href="usuarios">Usuarios</a>
 </body>
 </html>

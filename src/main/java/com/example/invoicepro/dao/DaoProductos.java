@@ -13,7 +13,7 @@ public class DaoProductos extends BaseJPADao {
     public List<Producto> listProducts() throws SQLException, Exception {
         List<Producto> productos = null;
         EntityManager em = getEntityManager();
-        Query allProductsQuery = em.createNamedQuery("Producto.findAll", Producto.class);
+        Query allProductsQuery = em.createNamedQuery("Productos.findAll", Producto.class);
         productos = allProductsQuery.getResultList();
         for (Producto p : productos) {
             em.refresh(p);

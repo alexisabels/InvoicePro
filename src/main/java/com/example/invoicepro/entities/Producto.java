@@ -1,28 +1,35 @@
 package com.example.invoicepro.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "PRODUCTOS")
 @NamedQueries({
-        @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p")
+        @NamedQuery(name = "Productos.findAll", query = "SELECT p FROM Producto p")
 })
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID") // Especifica el nombre de la columna en la base de datos
     private int id;
+
+    @Column(name = "NOMBRE")
     private String nombre;
+
+    @Column(name = "DESCRIPCION")
     private String descripcion;
+
+    @Column(name = "PRECIO")
     private double precio;
+
+    @Column(name = "CANTIDAD")
     private int cantidad;
+
+    @Column(name = "FOTOURL")
     private String fotoUrl;
-    private boolean enStock; // Nueva columna
+
+    @Column(name = "EN_STOCK") // Nombre de la columna en la base de datos
+    private boolean enStock;
 
     // Getters y setters
     public int getId() {

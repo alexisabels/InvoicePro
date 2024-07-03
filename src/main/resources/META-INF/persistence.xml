@@ -3,8 +3,10 @@
   <persistence-unit name="InvoiceProPU">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.example.invoicepro.entities.Producto</class>
+    <class>com.example.invoicepro.entities.Usuario</class>
+
     <properties>
-      <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://20.82.105.24:3306/InvoiceProSQL"/>
+      <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://db.alexisabel.com:3306/InvoiceProSQL"/>
       <property name="jakarta.persistence.jdbc.user" value="alexisab"/>
       <property name="jakarta.persistence.jdbc.password" value="4l3xcr4p"/>
       <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
