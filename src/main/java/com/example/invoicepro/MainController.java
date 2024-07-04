@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "mainController", urlPatterns = {"/productos", "/usuarios", "/ventas"})
+@WebServlet(name = "mainController", urlPatterns = {"/", "/productos", "/usuarios", "/ventas", "/stock"})
 public class MainController extends HttpServlet {
 
     private DaoProductos daoProductos = new DaoProductos();
@@ -22,25 +22,17 @@ public class MainController extends HttpServlet {
         String path = request.getServletPath();
 
         switch (path) {
+            case "/InvoicePro_war_exploded":
+                request.getRequestDispatcher("/index.jsp").forward(request, response);
+                break;
             case "/productos":
-                List<Producto> productos = null;
-                try {
-                    productos = daoProductos.listProducts();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                request.setAttribute("productos", productos);
-                request.getRequestDispatcher("/productos.jsp").forward(request, response);
+                handleProductosRequest(request, response);
+                break;
+            case "/stock":
+                handleStockRequest(request, response);
                 break;
             case "/usuarios":
-                List<Usuario> usuarios = null;
-                try {
-                    usuarios = daoUsuarios.listUsers();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                request.setAttribute("usuarios", usuarios);
-                request.getRequestDispatcher("/usuarios.jsp").forward(request, response);
+                handleUsuariosRequest(request, response);
                 break;
             case "/ventas":
                 // implementar lógica para ventas
@@ -49,5 +41,50 @@ public class MainController extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 break;
         }
+
+
+    }
+    private void handleProductosRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String query = request.getParameter("query");
+        List<Producto> productos;
+
+        try {
+            if (query != null && !query.isEmpty()) {
+                productos = daoProductos.searchProducts(query);
+            } else {
+                productos = daoProductos.listProducts();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        request.setAttribute("productos", productos);
+        request.getRequestDispatcher("/productos.jsp").forward(request, response);
+    }
+    private void handleStockRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String query = request.getParameter("query");
+        List<Producto> productos;
+
+        try {
+            if (query != null && !query.isEmpty()) {
+                productos = daoProductos.searchStockProducts(query);
+            } else {
+                productos = daoProductos.listStockProducts();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        request.setAttribute("productos", productos);
+        request.getRequestDispatcher("/stock.jsp").forward(request, response);
+    }
+    private void handleUsuariosRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Usuario> usuarios;
+        try {
+            usuarios = daoUsuarios.listUsers();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        request.setAttribute("usuarios", usuarios);
+        request.getRequestDispatcher("/usuarios.jsp").forward(request, response);
     }
 }
