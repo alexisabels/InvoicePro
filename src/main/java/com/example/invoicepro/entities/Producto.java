@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID") // Especifica el nombre de la columna en la base de datos
+    @Column(name = "ID")
     private int id;
 
     @Column(name = "NOMBRE")
@@ -28,7 +28,7 @@ public class Producto {
     @Column(name = "FOTOURL")
     private String fotoUrl;
 
-    @Column(name = "EN_STOCK") // Nombre de la columna en la base de datos
+    @Column(name = "EN_STOCK")
     private boolean enStock;
 
     // Getters y setters
