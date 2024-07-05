@@ -2,6 +2,7 @@ package com.example.invoicepro.entities;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Entity
 @Table(name = "USUARIOS")
@@ -22,7 +23,7 @@ public class Usuario {
 
     @Column(name = "FECHA_CREACION")
     private Timestamp fechaCreacion;
-
+    
     // Getters y setters
     public int getId() {
         return id;

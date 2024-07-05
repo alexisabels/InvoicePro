@@ -10,7 +10,7 @@
     <style>
         body {
             display: flex;
-            background-color: lightgray;
+            background-color: white;
         }
 
         .sidebar {

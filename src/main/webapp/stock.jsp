@@ -6,12 +6,10 @@
 
 
 <div class="content">
-    <h1 class="mb-4">Productos en Stock</h1>
+    <h1 class="mb-4">Lista de Productos en Stock</h1>
     <div class="mb-3 d-flex justify-content-left align-items-center">
-        <div>
-            <button id="addProductButton" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Añadir</button>
-        </div>
-        <div class="d-flex ms-3">
+
+        <div class="d-flex">
             <form id="searchForm" action="${pageContext.request.contextPath}/stock" method="get" class="d-flex">
                 <input class="form-control me-2" type="search" name="query" placeholder="Escribe ID o Nombre" aria-label="Buscar">
                 <button class="btn btn-outline-primary" type="submit">Buscar</button>
@@ -36,7 +34,6 @@
             <th scope="col">Descripción</th>
             <th scope="col">Precio</th>
             <th scope="col">Cantidad</th>
-            <th scope="col">Acciones</th>
         </tr>
         </thead>
         <tbody>
@@ -47,17 +44,7 @@
                 <td>${producto.descripcion}</td>
                 <td>${producto.precio}</td>
                 <td>${producto.cantidad}</td>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton${producto.id}" data-bs-toggle="dropdown" aria-expanded="false">
-                            Acciones
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${producto.id}">
-                            <li><a class="dropdown-item" href="editarProducto?id=${producto.id}"><i class="fa-solid fa-pen"></i> Editar</a></li>
-                            <li><a class="dropdown-item" href="eliminarProducto?id=${producto.id}"><i class="fa-solid fa-trash" style="color: #ff0040;"></i> Eliminar</a></li>
-                        </ul>
-                    </div>
-                </td>
+
             </tr>
         </c:forEach>
         </tbody>

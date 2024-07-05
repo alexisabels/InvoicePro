@@ -3,6 +3,8 @@ package com.example.invoicepro.dao;
 import com.example.invoicepro.entities.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
+
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,4 +23,12 @@ public class DaoUsuarios extends BaseJPADao {
         em.close();
         return usuarios;
     }
+    public void addUser(Usuario usuario) throws SQLException, Exception {
+        EntityManager em = getEntityManager();
+        em.getTransaction().begin();
+        em.persist(usuario);
+        em.getTransaction().commit();
+        em.close();
+    }
+
 }

@@ -2,6 +2,7 @@ package com.example.invoicepro.dao;
 
 import com.example.invoicepro.entities.Producto;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
@@ -56,6 +57,7 @@ public class DaoProductos extends BaseJPADao {
         em.close();
         return productos;
     }
+
     public List<Producto> searchStockProducts(String query) throws SQLException, Exception {
         EntityManager em = getEntityManager();
         List<Producto> productos = null;
@@ -75,6 +77,26 @@ public class DaoProductos extends BaseJPADao {
         }
         em.close();
         return productos;
+    }
+
+    public void addProduct(Producto producto) throws SQLException, Exception {
+    EntityManager em = getEntityManager();
+    em.getTransaction().begin();
+    em.persist(producto);
+    em.getTransaction().commit();
+    em.close();
+}
+
+    public void deleteProduct(int id) {
+        EntityManager em = getEntityManager();
+        Producto p = em.find(Producto.class, id);
+        if (p != null) {
+            EntityTransaction utx = em.getTransaction();
+            utx.begin();
+            em.remove(p);
+            utx.commit();
+        }
+        em.close();
     }
 
 }

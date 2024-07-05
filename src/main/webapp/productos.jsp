@@ -9,7 +9,7 @@
     <h1 class="mb-4">Productos</h1>
     <div class="mb-3 d-flex justify-content-left align-items-center">
         <div>
-            <button id="addProductButton" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Añadir</button>
+            <button id="addProductButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarProductoModal"><i class="fas fa-plus me-2"></i>Añadir</button>
         </div>
         <div class="d-flex ms-3">
             <form id="searchForm" action="${pageContext.request.contextPath}/productos" method="get" class="d-flex">
@@ -70,5 +70,6 @@
         </c:otherwise>
     </c:choose>
 </div>
+<jsp:include page="modalAgregarProducto.jsp" />
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
