@@ -1,7 +1,9 @@
 package com.example.invoicepro;
 
+import com.example.invoicepro.dao.DaoClientes;
 import com.example.invoicepro.dao.DaoProductos;
 import com.example.invoicepro.dao.DaoUsuarios;
+import com.example.invoicepro.entities.Cliente;
 import com.example.invoicepro.entities.Producto;
 import com.example.invoicepro.entities.Usuario;
 import jakarta.servlet.ServletException;
@@ -13,12 +15,12 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
-@WebServlet(name = "mainController", urlPatterns = {"/", "/productos", "/usuarios", "/ventas", "/stock", "/agregarProducto", "/editarProducto", "/agregarUsuario", "/eliminarProducto"})
+@WebServlet(name = "mainController", urlPatterns = {"/", "/productos", "/clientes", "/usuarios", "/ventas", "/stock", "/agregarProducto", "/editarProducto", "/agregarUsuario", "/eliminarProducto", "/eliminarUsuario"})
 public class MainController extends HttpServlet {
 
     private DaoProductos daoProductos = new DaoProductos();
     private DaoUsuarios daoUsuarios = new DaoUsuarios();
-
+    private DaoClientes daoClientes = new DaoClientes();
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
@@ -53,6 +55,9 @@ public class MainController extends HttpServlet {
             case "/productos":
                 handleProductosRequest(request, response);
                 break;
+            case "/clientes":
+                handleClientesRequest(request, response);
+                break;
             case "/stock":
                 handleStockRequest(request, response);
                 break;
@@ -61,6 +66,9 @@ public class MainController extends HttpServlet {
                 break;
             case "/eliminarProducto":
                 handleDeleteProduct(request, response);
+                break;
+            case "/eliminarUsuario":
+                handleDeleteUser(request, response);
                 break;
             case "/ventas":
                 // implementar lógica para ventas
@@ -188,4 +196,25 @@ public class MainController extends HttpServlet {
         }
         response.sendRedirect(request.getContextPath() + "/usuarios");
     }
+    private void handleDeleteUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            daoUsuarios.deleteUser(id);
+            response.sendRedirect(request.getContextPath() + "/usuarios");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+    private void handleClientesRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Cliente> clientes;
+        try {
+            clientes = daoClientes.listClientes();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        request.setAttribute("clientes", clientes);
+        request.getRequestDispatcher("/clientes.jsp").forward(request, response);
+    }
+
 }

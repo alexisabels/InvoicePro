@@ -1,7 +1,9 @@
 package com.example.invoicepro.dao;
 
+import com.example.invoicepro.entities.Producto;
 import com.example.invoicepro.entities.Usuario;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 
@@ -30,5 +32,15 @@ public class DaoUsuarios extends BaseJPADao {
         em.getTransaction().commit();
         em.close();
     }
-
+    public void deleteUser(int id) {
+        EntityManager em = getEntityManager();
+        Usuario u = em.find(Usuario.class, id);
+        if (u != null) {
+            EntityTransaction utx = em.getTransaction();
+            utx.begin();
+            em.remove(u);
+            utx.commit();
+        }
+        em.close();
+    }
 }

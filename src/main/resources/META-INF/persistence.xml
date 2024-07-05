@@ -4,6 +4,7 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.example.invoicepro.entities.Producto</class>
     <class>com.example.invoicepro.entities.Usuario</class>
+    <class>com.example.invoicepro.entities.Cliente</class>
 
     <properties>
       <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://db.alexisabel.com:3306/InvoiceProSQL"/>

@@ -33,7 +33,6 @@
                             Acciones
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${usuario.id}">
-                            <li><a class="dropdown-item" href="editarUsuario?id=${usuario.id}"><i class="fa-solid fa-pen"></i> Editar</a></li>
                             <li><a class="dropdown-item" href="eliminarUsuario?id=${usuario.id}"><i class="fa-solid fa-trash" style="color: #ff0040;"></i> Eliminar</a></li>
                         </ul>
                     </div>
