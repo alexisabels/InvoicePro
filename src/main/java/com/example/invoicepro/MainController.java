@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
-@WebServlet(name = "mainController", urlPatterns = {"/", "/productos", "/usuarios", "/ventas", "/stock", "/agregarProducto", "/agregarUsuario", "/eliminarProducto"})
+@WebServlet(name = "mainController", urlPatterns = {"/", "/productos", "/usuarios", "/ventas", "/stock", "/agregarProducto", "/editarProducto", "/agregarUsuario", "/eliminarProducto"})
 public class MainController extends HttpServlet {
 
     private DaoProductos daoProductos = new DaoProductos();
@@ -26,6 +26,9 @@ public class MainController extends HttpServlet {
         switch (path) {
             case "/agregarProducto":
                 handleAddProduct(request, response);
+                break;
+            case "/editarProducto":
+                handleEditProduct(request, response);
                 break;
             case "/agregarUsuario":
                 handleAddUser(request, response);
@@ -146,6 +149,28 @@ public class MainController extends HttpServlet {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+    }
+    private void handleEditProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String nombre = request.getParameter("nombre");
+        String descripcion = request.getParameter("descripcion");
+        double precio = Double.parseDouble(request.getParameter("precio"));
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        String fotoUrl = request.getParameter("fotoUrl");
+
+        Producto producto = new Producto();
+        producto.setId(id);
+        producto.setNombre(nombre);
+        producto.setDescripcion(descripcion);
+        producto.setPrecio(precio);
+        producto.setCantidad(cantidad);
+        producto.setFotoUrl(fotoUrl);
+        try {
+            daoProductos.updateProduct(producto);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        response.sendRedirect(request.getContextPath() + "/productos");
     }
 
 

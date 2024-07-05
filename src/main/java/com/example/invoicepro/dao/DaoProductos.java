@@ -99,4 +99,16 @@ public class DaoProductos extends BaseJPADao {
         em.close();
     }
 
+
+    public void updateProduct(Producto p) {
+        EntityManager em = getEntityManager();
+        EntityTransaction utx = em.getTransaction();
+        utx.begin();
+        em.merge(p);
+        utx.commit();
+        em.close();
+    }
+
+
+
 }

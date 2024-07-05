@@ -58,7 +58,10 @@
                                     Acciones
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton${producto.id}">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/editarProducto?id=${producto.id}"><i class="fa-solid fa-pen"></i> Editar</a></li>
+                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editarProductoModal"
+                                           data-id="${producto.id}" data-nombre="${producto.nombre}"
+                                           data-descripcion="${producto.descripcion}" data-precio="${producto.precio}"
+                                           data-cantidad="${producto.cantidad}" data-fotourl="${producto.fotoUrl}"><i class="fa-solid fa-pen"></i> Editar</a></li>
                                     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/eliminarProducto?id=${producto.id}"><i class="fa-solid fa-trash" style="color: #ff0040;"></i> Eliminar</a></li>
                                 </ul>
                             </div>
@@ -71,5 +74,28 @@
     </c:choose>
 </div>
 <jsp:include page="modalAgregarProducto.jsp" />
+<jsp:include page="modalEditarProducto.jsp" />
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        var editarProductoModal = document.getElementById('editarProductoModal');
+        editarProductoModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var id = button.getAttribute('data-id');
+            var nombre = button.getAttribute('data-nombre');
+            var descripcion = button.getAttribute('data-descripcion');
+            var precio = button.getAttribute('data-precio');
+            var cantidad = button.getAttribute('data-cantidad');
+            var fotoUrl = button.getAttribute('data-fotourl');
+
+            var modal = $(this);
+            modal.find('#id').val(id);
+            modal.find('#nombre').val(nombre);
+            modal.find('#descripcion').val(descripcion);
+            modal.find('#precio').val(precio);
+            modal.find('#cantidad').val(cantidad);
+            modal.find('#fotoUrl').val(fotoUrl);
+        });
+    });
+</script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
