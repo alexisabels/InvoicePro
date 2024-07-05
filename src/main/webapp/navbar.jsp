@@ -57,7 +57,8 @@
     <a href="${pageContext.request.contextPath}/"><i class="fas fa-home"></i> Inicio</a>
     <a href="${pageContext.request.contextPath}/productos"><i class="fas fa-box-open"></i> Productos</a>
     <a href="${pageContext.request.contextPath}/stock"><i class="fa-solid fa-layer-group"></i> Stock actual</a>
-    <a href="${pageContext.request.contextPath}/usuarios"><i class="fas fa-users"></i> Usuarios</a>
+    <a href="${pageContext.request.contextPath}/clientes"><i class="fas fa-users"></i> Clientes</a>
+    <a href="${pageContext.request.contextPath}/usuarios"><i class="fa-solid fa-user-tie"></i></i> Usuarios</a>
     <a href="${pageContext.request.contextPath}/ventas"><i class="fa-solid fa-receipt"></i> Ventas</a>
     <a class="new" href="${pageContext.request.contextPath}/nueva-venta"><i class="fa-solid fa-cart-shopping"></i> <strong>NUEVA VENTA</strong></a>
 </div>
