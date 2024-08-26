@@ -54,7 +54,7 @@
 <body>
 <div class="sidebar">
     <h2 class="text-center mt-4">InvoicePro</h2>
-    <a href="/"><i class="fas fa-home"></i> Inicio</a>
+        <a href="${pageContext.request.contextPath}"><i class="fas fa-home"></i> Inicio</a>
     <a href="productos"><i class="fas fa-box-open"></i> Productos</a>
     <a href="stock"><i class="fa-solid fa-layer-group"></i> Stock actual</a>
     <a href="clientes"><i class="fas fa-users"></i> Clientes</a>
