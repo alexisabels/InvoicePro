@@ -21,7 +21,7 @@ public class Usuario {
     @Column(name = "CONTRASEÑA")
     private String contraseña;
 
-    @Column(name = "FECHA_CREACION")
+    @Column(name = "FECHA_CREACION", insertable = false, updatable = false)
     private Timestamp fechaCreacion;
     
     // Getters y setters
