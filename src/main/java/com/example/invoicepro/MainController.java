@@ -40,7 +40,16 @@ public class MainController extends HttpServlet {
                 break;
             case "/agregarVenta":
                 handleAddVenta(request, response);
-
+                break;
+            case "/buscarProductosVenta":
+                try {
+                    handleSearchProductsToSell(request, response);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            case "/addSelectedProduct":
+                handleAddSelectedProduct(request, response);
                 break;
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -51,6 +60,8 @@ public class MainController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
+        String action = request.getParameter("action");
+
 
 
         switch (path) {
@@ -81,7 +92,11 @@ public class MainController extends HttpServlet {
                 break;
 
             case "/nueva-venta":
-                request.getRequestDispatcher("/nuevaVenta.jsp").forward(request, response);
+                if ("clear".equals(action)) {
+                    handleClearSelectedProducts(request, response);
+                } else {
+                    request.getRequestDispatcher("/nuevaVenta.jsp").forward(request, response);
+                }
                 break;
 
             default:
@@ -90,32 +105,107 @@ public class MainController extends HttpServlet {
         }
     }
 
+    private void handleRemoveSelectedProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        HttpSession session = request.getSession();
+        List<Producto> selectedProducts = (List<Producto>) session.getAttribute("selectedProducts");
+
+        if (selectedProducts != null) {
+            selectedProducts.removeIf(producto -> producto.getId() == id);
+            session.setAttribute("selectedProducts", selectedProducts);
+        }
+
+        response.sendRedirect(request.getContextPath() + "/nueva-venta");
+    }
+
+
+    private void handleAddSelectedProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String nombre = request.getParameter("nombre");
+        double precio = Double.parseDouble(request.getParameter("precio"));
+        int cantidadDisponible = Integer.parseInt(request.getParameter("cantidadDisponible"));
+
+        Producto productoSeleccionado = new Producto();
+        productoSeleccionado.setId(id);
+        productoSeleccionado.setNombre(nombre);
+        productoSeleccionado.setPrecio(precio);
+        productoSeleccionado.setCantidad(cantidadDisponible);
+
+        HttpSession session = request.getSession();
+        List<Producto> selectedProducts = (List<Producto>) session.getAttribute("selectedProducts");
+
+        if (selectedProducts == null) {
+            selectedProducts = new ArrayList<>();
+        }
+
+        selectedProducts.add(productoSeleccionado);
+        session.setAttribute("selectedProducts", selectedProducts);
+
+
+        response.sendRedirect(request.getContextPath() + "/nueva-venta");
+    }
+
     private void handleAddVenta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int idProducto = Integer.parseInt(request.getParameter("idProducto"));
-        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
-        int precioUnitario = Integer.parseInt(request.getParameter("precioUnitario"));
         int idCliente = Integer.parseInt(request.getParameter("idCliente"));
         int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-        Venta venta = new Venta();
-        DetalleVenta detalleVenta = new DetalleVenta();
 
-        detalleVenta.setIdProducto(idProducto);
-        detalleVenta.setCantidad(cantidad);
-        detalleVenta.setPrecioUnitario(precioUnitario);
+        Venta venta = new Venta();
         venta.setIdCliente(idCliente);
         venta.setIdUsuario(idUsuario);
 
-        List<DetalleVenta> detalles = new ArrayList<>();
-        detalles.add(detalleVenta);
-        venta.setDetalles(detalles);
+        HttpSession session = request.getSession();
+        List<Producto> selectedProducts = (List<Producto>) session.getAttribute("selectedProducts");
 
-        venta.setTotal(cantidad * precioUnitario);
+        List<DetalleVenta> detalles = new ArrayList<>();
+
+        double total = 0.0;
+
+        if (selectedProducts != null) {
+            for (Producto producto : selectedProducts) {
+                int cantidad = Integer.parseInt(request.getParameter("cantidad_" + producto.getId()));
+
+                // Crear un nuevo detalle de venta
+                DetalleVenta detalleVenta = new DetalleVenta();
+                detalleVenta.setIdProducto(producto.getId());
+                detalleVenta.setCantidad(cantidad);
+                detalleVenta.setPrecioUnitario(producto.getPrecio());
+                detalleVenta.setVenta(venta);
+  detalles.add(detalleVenta);
+  total += cantidad * producto.getPrecio();
+            }
+        }
+        venta.setDetalles(detalles);
+        venta.setTotal(total);
+
         try {
             daoVenta.addVenta(venta);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        session.removeAttribute("selectedProducts");
+
         response.sendRedirect(request.getContextPath() + "/nueva-venta");
+    }
+
+    private void handleClearSelectedProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        session.removeAttribute("selectedProducts");
+
+        response.sendRedirect(request.getContextPath() + "/nueva-venta");
+    }
+    private void handleSearchProductsToSell(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String query = request.getParameter("query");
+        List<Producto> productos = null;
+
+        if (query != null && !query.trim().isEmpty()) {
+
+            productos = daoProductos.searchProducts(query);
+        }
+
+        request.setAttribute("productos", productos);
+
+        request.getRequestDispatcher("/nuevaVenta.jsp").forward(request, response);
     }
 
     private void handleProductosRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

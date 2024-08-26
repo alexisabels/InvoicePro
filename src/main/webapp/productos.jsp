@@ -5,7 +5,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <div class="content">
-    <!-- Aquí irá el contenido específico de la página de productos -->
     <h1 class="mb-4">Productos</h1>
     <div class="mb-3 d-flex justify-content-left align-items-center">
         <div>
