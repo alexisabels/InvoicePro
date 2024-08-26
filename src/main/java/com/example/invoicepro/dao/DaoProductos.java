@@ -109,6 +109,11 @@ public class DaoProductos extends BaseJPADao {
         em.close();
     }
 
-
+    public Producto findProductById(int id) {
+        EntityManager em = getEntityManager();
+        Producto producto = (Producto)em.find(Producto.class, id);
+        em.close();
+        return producto;
+    }
 
 }
