@@ -14,7 +14,6 @@
 <body>
 <div class="container mt-5">
     <div class="row">
-        <!-- Panel de Productos Disponibles (Izquierda) -->
         <div class="col-md-6">
             <h2>Productos Disponibles</h2>
             <form action="${pageContext.request.contextPath}/buscarProductosVenta" method="post" class="mb-3">
@@ -46,7 +45,6 @@
             </c:choose>
         </div>
 
-        <!-- Panel de Productos Seleccionados (Derecha) -->
         <div class="col-md-6">
             <h2>Productos Seleccionados</h2>
             <form id="formAddVenta" class="row g-3 needs-validation" novalidate action="${pageContext.request.contextPath}/agregarVenta" method="post">
