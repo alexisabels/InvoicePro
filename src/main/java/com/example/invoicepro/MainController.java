@@ -3,9 +3,8 @@ package com.example.invoicepro;
 import com.example.invoicepro.dao.DaoClientes;
 import com.example.invoicepro.dao.DaoProductos;
 import com.example.invoicepro.dao.DaoUsuarios;
-import com.example.invoicepro.entities.Cliente;
-import com.example.invoicepro.entities.Producto;
-import com.example.invoicepro.entities.Usuario;
+import com.example.invoicepro.dao.DaoVenta;
+import com.example.invoicepro.entities.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,13 +13,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-@WebServlet(name = "mainController", urlPatterns = {"/", "/productos", "/clientes", "/usuarios", "/ventas", "/stock", "/agregarProducto", "/editarProducto", "/agregarUsuario", "/eliminarProducto", "/eliminarUsuario"})
+
+@WebServlet(name = "mainController", urlPatterns = {"/", "/productos", "/clientes", "/usuarios", "/nueva-venta", "/agregarVenta", "/ventas", "/stock", "/agregarProducto", "/editarProducto", "/agregarUsuario", "/eliminarProducto", "/eliminarUsuario"})
 public class MainController extends HttpServlet {
 
     private DaoProductos daoProductos = new DaoProductos();
     private DaoUsuarios daoUsuarios = new DaoUsuarios();
     private DaoClientes daoClientes = new DaoClientes();
+    private DaoVenta daoVenta = new DaoVenta();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
@@ -35,6 +38,10 @@ public class MainController extends HttpServlet {
             case "/agregarUsuario":
                 handleAddUser(request, response);
                 break;
+            case "/agregarVenta":
+                handleAddVenta(request, response);
+
+                break;
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 break;
@@ -44,7 +51,6 @@ public class MainController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-
 
 
         switch (path) {
@@ -73,13 +79,44 @@ public class MainController extends HttpServlet {
             case "/ventas":
                 // implementar lógica para ventas
                 break;
+
+            case "/nueva-venta":
+                request.getRequestDispatcher("/nuevaVenta.jsp").forward(request, response);
+                break;
+
             default:
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 break;
         }
     }
 
+    private void handleAddVenta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int idProducto = Integer.parseInt(request.getParameter("idProducto"));
+        int cantidad = Integer.parseInt(request.getParameter("cantidad"));
+        int precioUnitario = Integer.parseInt(request.getParameter("precioUnitario"));
+        int idCliente = Integer.parseInt(request.getParameter("idCliente"));
+        int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+        Venta venta = new Venta();
+        DetalleVenta detalleVenta = new DetalleVenta();
 
+        detalleVenta.setIdProducto(idProducto);
+        detalleVenta.setCantidad(cantidad);
+        detalleVenta.setPrecioUnitario(precioUnitario);
+        venta.setIdCliente(idCliente);
+        venta.setIdUsuario(idUsuario);
+
+        List<DetalleVenta> detalles = new ArrayList<>();
+        detalles.add(detalleVenta);
+        venta.setDetalles(detalles);
+
+        venta.setTotal(cantidad * precioUnitario);
+        try {
+            daoVenta.addVenta(venta);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        response.sendRedirect(request.getContextPath() + "/nueva-venta");
+    }
 
     private void handleProductosRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String query = request.getParameter("query");
@@ -141,6 +178,9 @@ public class MainController extends HttpServlet {
         producto.setPrecio(precio);
         producto.setCantidad(cantidad);
         producto.setFotoUrl(fotoUrl);
+        if (cantidad > 0) {
+            producto.setEnStock(true);
+        }
         try {
             daoProductos.addProduct(producto);
         } catch (Exception e) {
@@ -148,6 +188,7 @@ public class MainController extends HttpServlet {
         }
         response.sendRedirect(request.getContextPath() + "/productos");
     }
+
     private void handleDeleteProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -158,6 +199,7 @@ public class MainController extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+
     private void handleEditProduct(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
         String nombre = request.getParameter("nombre");
@@ -173,6 +215,9 @@ public class MainController extends HttpServlet {
         producto.setPrecio(precio);
         producto.setCantidad(cantidad);
         producto.setFotoUrl(fotoUrl);
+        if (cantidad > 0) {
+            producto.setEnStock(true);
+        }
         try {
             daoProductos.updateProduct(producto);
         } catch (Exception e) {
@@ -196,6 +241,7 @@ public class MainController extends HttpServlet {
         }
         response.sendRedirect(request.getContextPath() + "/usuarios");
     }
+
     private void handleDeleteUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -206,15 +252,27 @@ public class MainController extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+
     private void handleClientesRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String query = request.getParameter("query");
         List<Cliente> clientes;
+        HttpSession session = request.getSession();
+
         try {
-            clientes = daoClientes.listClientes();
+            if (query != null && !query.isEmpty()) {
+                clientes = daoClientes.searchClientes(query);
+            } else {
+                clientes = daoClientes.listClientes();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         request.setAttribute("clientes", clientes);
         request.getRequestDispatcher("/clientes.jsp").forward(request, response);
-    }
 
+    }
 }
+
+
+
