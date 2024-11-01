@@ -1,8 +1,8 @@
-package com.example.invoicepro.entities;
+package com.example.invoicepro.usuario;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
-import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "USUARIOS")
@@ -21,8 +21,9 @@ public class Usuario {
     @Column(name = "CONTRASEÑA")
     private String contraseña;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "FECHA_CREACION", insertable = false, updatable = false)
-    private Timestamp fechaCreacion;
+    private Date fechaCreacion;
     
     // Getters y setters
     public int getId() {
@@ -49,7 +50,7 @@ public class Usuario {
         this.contraseña = contraseña;
     }
 
-    public Timestamp getFechaCreacion() {
+    public Date getFechaCreacion() {
         return fechaCreacion;
     }
 

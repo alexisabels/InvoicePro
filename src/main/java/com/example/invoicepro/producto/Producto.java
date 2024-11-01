@@ -1,4 +1,4 @@
-package com.example.invoicepro.entities;
+package com.example.invoicepro.producto;
 
 import jakarta.persistence.*;
 

@@ -1,5 +1,4 @@
-<%@ page import="com.example.invoicepro.entities.Cliente" %>
-<%@ page import="java.util.List" %>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="navbar.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>

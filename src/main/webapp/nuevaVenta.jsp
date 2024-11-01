@@ -14,6 +14,7 @@
 <body>
 <div class="container mt-5">
     <div class="row">
+
         <div class="col-md-6">
             <h2>Productos Disponibles</h2>
             <form action="${pageContext.request.contextPath}/buscarProductosVenta" method="post" class="mb-3">
@@ -36,6 +37,9 @@
                                         <input type="hidden" name="precio" value="${producto.precio}">
                                         <input type="hidden" name="cantidadDisponible" value="${producto.cantidad}">
                                         <button class="btn btn-primary" type="submit">Añadir</button>
+
+                                            <a class="btn btn-warning" target="_blank" type="button" href="productos?query=${producto.nombre}">Más info                                         <i class="fa-solid fa-up-right-from-square"></i>
+                                            </a>
                                     </div>
                                 </div>
                             </form>
@@ -47,15 +51,24 @@
 
         <div class="col-md-6">
             <h2>Productos Seleccionados</h2>
-            <form id="formAddVenta" class="row g-3 needs-validation" novalidate action="${pageContext.request.contextPath}/agregarVenta" method="post">
+            <form id="formAddVenta" class="row g-3 needs-validation"  action="${pageContext.request.contextPath}/agregarVenta" method="post">
                 <div class="col-md-6">
                     <label for="userId" class="form-label">ID Usuario</label>
                     <input type="text" class="form-control" id="userId" name="idUsuario" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="clientId" class="form-label">ID Cliente</label>
-                    <input type="text" class="form-control" id="clientId" name="idCliente" required>
+                    <label for="clientId" class="form-label">
+                        <span><a href="clientes" data-bs-toggle="modal" data-bs-target="#agregarClienteModal"><i class="fas fa-plus"></i>Nuevo cliente</a>
+                        <a href="clientes" target=”_blank”>Buscar cliente                                         <i class="fa-solid fa-up-right-from-square"></i>
+</a>
+                        </span>
+                    </label>
+
+                    <input type="text" class="form-control" id="clientId" name="idCliente"
+                           value="<%= session.getAttribute("clientId") != null ? session.getAttribute("clientId") : "" %>" required placeholder="ID Cliente">
                 </div>
+
+
                 <c:forEach var="producto" items="${sessionScope.selectedProducts}">
                     <div class="d-flex align-items-center mb-2">
                         <input type="hidden" name="idProducto_${producto.id}" value="${producto.id}">
@@ -95,9 +108,10 @@
     }
 
     document.addEventListener('DOMContentLoaded', calcularTotal);
-
+   
 
 </script>
+<jsp:include page="modalAgregarCliente.jsp" />
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

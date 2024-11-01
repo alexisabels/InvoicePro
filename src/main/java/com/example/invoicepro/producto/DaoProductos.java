@@ -1,6 +1,6 @@
-package com.example.invoicepro.dao;
+package com.example.invoicepro.producto;
 
-import com.example.invoicepro.entities.Producto;
+import com.example.invoicepro.dao.BaseJPADao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;

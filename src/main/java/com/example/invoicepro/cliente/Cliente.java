@@ -1,4 +1,4 @@
-package com.example.invoicepro.entities;
+package com.example.invoicepro.cliente;
 
 import jakarta.persistence.*;
 import java.util.Date;

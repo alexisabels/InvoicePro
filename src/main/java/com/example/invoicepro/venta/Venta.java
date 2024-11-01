@@ -1,11 +1,15 @@
-package com.example.invoicepro.entities;
+package com.example.invoicepro.venta;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "VENTAS")
+@NamedQueries({
+        @NamedQuery(name = "Ventas.findAll", query = "SELECT v FROM Venta v")
+})
 public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +22,9 @@ public class Venta {
     @Column(name = "id_usuario")
     private int idUsuario;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha_venta", insertable = false, updatable = false)
-    private Timestamp fechaVenta;
+    private Date fechaVenta;
 
     @Column(name = "total")
     private double total;
@@ -52,7 +57,7 @@ public class Venta {
         this.idUsuario = idUsuario;
     }
 
-    public Timestamp getFechaVenta() {
+    public Date getFechaVenta() {
         return fechaVenta;
     }
 

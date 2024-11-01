@@ -1,11 +1,9 @@
-package com.example.invoicepro.dao;
+package com.example.invoicepro.usuario;
 
-import com.example.invoicepro.entities.Producto;
-import com.example.invoicepro.entities.Usuario;
+import com.example.invoicepro.dao.BaseJPADao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -43,4 +41,11 @@ public class DaoUsuarios extends BaseJPADao {
         }
         em.close();
     }
+    public Usuario findById(int id) throws SQLException, Exception {
+        EntityManager em = getEntityManager();
+        Usuario usuario = em.find(Usuario.class, id);
+        em.close();
+        return usuario;
+    }
+
 }

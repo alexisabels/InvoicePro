@@ -1,6 +1,6 @@
-package com.example.invoicepro.dao;
+package com.example.invoicepro.cliente;
 
-import com.example.invoicepro.entities.Cliente;
+import com.example.invoicepro.dao.BaseJPADao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -38,6 +38,19 @@ public class DaoClientes extends BaseJPADao {
             TypedQuery<Cliente> searchQuery = em.createQuery(
                     "SELECT c FROM Cliente c WHERE c.email LIKE :query OR c.telefono LIKE :query", Cliente.class);
             searchQuery.setParameter("query", "%" + query + "%");
+            clientes = searchQuery.getResultList();
+        } finally {
+            em.close();
+        }
+        return clientes;
+    }
+    public List<Cliente> searchClientesFromId(String query) throws SQLException, Exception {
+        List<Cliente> clientes = null;
+        EntityManager em = getEntityManager();
+        try {
+            TypedQuery<Cliente> searchQuery = em.createQuery(
+                    "SELECT c FROM Cliente c WHERE c.id = :query", Cliente.class);
+            searchQuery.setParameter("query", Long.valueOf(query));
             clientes = searchQuery.getResultList();
         } finally {
             em.close();
